@@ -1,6 +1,6 @@
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using RestMoney.Dtos;
+using RestMoney.Measurement;
 
 namespace RestMoney.Controllers
 {
@@ -8,9 +8,18 @@ namespace RestMoney.Controllers
     [Route("[controller]")]
     public class IncomeController : ControllerBase
     {
+        private readonly IMeasurementService _measurementService;
+
+        public IncomeController(IMeasurementService measurementService)
+        {
+            _measurementService = measurementService;
+        }
+
         [HttpGet("uk/{gross}")]
         public ActionResult<IncomeDto> GetUK(decimal gross)
         {
+            _ = _measurementService.CountIncomeRequest("UK");
+
             // TODO verify gross is above 0
             var allowance = 12570.0M;
 
@@ -70,6 +79,8 @@ namespace RestMoney.Controllers
         [HttpGet("th/{gross}")]
         public ActionResult<IncomeDto> GetThailand(decimal gross)
         {
+            _ = _measurementService.CountIncomeRequest("TH");
+
             var taxDue = gross * 0.15M;
 
             return new IncomeDto
@@ -83,6 +94,8 @@ namespace RestMoney.Controllers
         [HttpGet("ae/{gross}")]
         public ActionResult<IncomeDto> GetUnitedArabEmirates(decimal gross)
         {
+            _ = _measurementService.CountIncomeRequest("AE");
+
             return new IncomeDto
             {
                 TaxDue = 0,
