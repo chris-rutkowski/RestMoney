@@ -66,5 +66,29 @@ namespace RestMoney.Controllers
                 Net = gross - taxDue - niDue
             };
         }
+
+        [HttpGet("th/{gross}")]
+        public ActionResult<IncomeDto> GetThailand(decimal gross)
+        {
+            var taxDue = gross * 0.15M;
+
+            return new IncomeDto
+            {
+                TaxDue = taxDue,
+                NationalInsurance = 0,
+                Net = gross - taxDue
+            };
+        }
+
+        [HttpGet("ae/{gross}")]
+        public ActionResult<IncomeDto> GetUnitedArabEmirates(decimal gross)
+        {
+            return new IncomeDto
+            {
+                TaxDue = 0,
+                NationalInsurance = 0,
+                Net = gross
+            };
+        }
     }
 }
